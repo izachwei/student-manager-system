@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.seven.dao.StudentMapper">
+  <resultMap id="BaseResultMap" type="com.wj.seven.common.domain.Student">
+    <id column="student_id" jdbcType="VARCHAR" property="studentId" />
+    <result column="student_name" jdbcType="VARCHAR" property="studentName" />
+    <result column="student_sex" jdbcType="INTEGER" property="studentSex" />
+    <result column="student_score" jdbcType="VARCHAR" property="studentScore" />
+    <result column="student_school" jdbcType="VARCHAR" property="studentSchool" />
+    <result column="student_profession" jdbcType="VARCHAR" property="studentProfession" />
+    <result column="student_direction" jdbcType="VARCHAR" property="studentDirection" />
+    <result column="student_phone" jdbcType="VARCHAR" property="studentPhone" />
+    <result column="student_email" jdbcType="VARCHAR" property="studentEmail" />
+    <result column="student_num" jdbcType="VARCHAR" property="studentNum" />
+    <result column="student_adress" jdbcType="VARCHAR" property="studentAdress" />
+    <result column="student_remark" jdbcType="VARCHAR" property="studentRemark" />
+    <result column="student_clazz_name" jdbcType="VARCHAR" property="studentClazzName" />
+    <result column="student_clazz_id" jdbcType="VARCHAR" property="studentClazzId" />
+    <result column="student_group_id" jdbcType="VARCHAR" property="studentGroupId" />
+    <result column="student_status" jdbcType="INTEGER" property="studentStatus" />
+    <result column="student_remark1" jdbcType="VARCHAR" property="studentRemark1" />
+    <association property="studentUser" column="student_id" select="getUser">
+    </association>
+    <association property="studentGroup" column="student_group_id" select="getGroup">
+    </association>
+  </resultMap>
+  <resultMap id="userMap" type="com.wj.seven.common.domain.User">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_pwd" jdbcType="INTEGER" property="userPwd" />
+    <result column="user_level" jdbcType="VARCHAR" property="userLevel" />
+    <result column="user_status" jdbcType="VARCHAR" property="userStatus" />
+  </resultMap>
+
+  <resultMap id="groupMap" type="com.wj.seven.common.domain.Group">
+    <id column="group_id" jdbcType="VARCHAR" property="groupId" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="group_count" jdbcType="INTEGER" property="groupCount" />
+    <result column="group_leader_id" jdbcType="VARCHAR" property="groupLeaderId" />
+    <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName" />
+    <result column="group_project_id" jdbcType="VARCHAR" property="groupProjectId" />
+    <result column="group_project_name" jdbcType="VARCHAR" property="groupProjectName" />
+    <result column="group_clazz_id" jdbcType="VARCHAR" property="groupClazzId" />
+    <result column="group_remarks1" jdbcType="VARCHAR" property="groupRemarks1" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    student_id, student_name, student_sex, student_score, student_school, student_profession, 
+    student_direction, student_phone, student_email, student_num, student_adress, student_remark, 
+    student_clazz_name, student_clazz_id, student_group_id, student_status, student_remark1
+  </sql>
+  
+  <select id="getUser" parameterType="java.lang.String" resultMap="userMap">
+      SELECT  * FROM  u_user WHERE user_id = #{student_id}
+  </select>
+
+  <select id="getGroup" parameterType="java.lang.String" resultMap="groupMap">
+      SELECT  * FROM  `group` WHERE group_id = #{student_group_id}
+  </select>
+
+<!--
+student_id	varchar	50
+student_name	varchar	255
+student_sex	int	11	0	-1
+student_score	varchar	255
+student_school	varchar	255
+student_profession	varchar
+student_direction	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_phone	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_email	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_num	varchar	255	0	0	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_adress	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_remark	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_clazz_name	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_clazz_id	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_group_id	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+student_status	int	11	0	-1	0	0	0	0		0					0	0
+student_remark1	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+
+-->
+
+
+  <!-- 批量插入学生 -->
+  <insert id="insertList" parameterType="java.util.List">
+    insert into student (student_id, student_name, student_num,
+    student_sex, student_profession,student_school, student_phone,student_direction,student_clazz_name,
+    student_clazz_id)
+    values
+    <foreach collection="list" item="stu" index="index" separator=",">
+      (
+        #{stu.studentId},#{stu.studentName},#{stu.studentNum},#{stu.studentSex},#{stu.studentProfession},
+      #{stu.studentSchool},#{stu.studentPhone},#{stu.studentDirection},#{stu.studentClazzName},#{stu.studentClazzId}
+      )
+    </foreach>
+  </insert>
+
+
+  <!-- 通过班级查询学生 -->
+  <select id="selectByClazzId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from student
+    where student_clazz_id = #{studentClazzId} and student_status=1
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    where student_id = #{studentId,jdbcType=VARCHAR} and student_status=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from student
+    where student_id = #{studentId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wj.seven.common.domain.Student">
+    insert into student (student_id, student_name, student_sex, 
+      student_score, student_school, student_profession, 
+      student_direction, student_phone, student_email, 
+      student_num, student_adress, student_remark, 
+      student_clazz_name, student_clazz_id, student_group_id, 
+      student_status, student_remark1)
+    values (#{studentId,jdbcType=VARCHAR}, #{studentName,jdbcType=VARCHAR}, #{studentSex,jdbcType=INTEGER}, 
+      #{studentScore,jdbcType=VARCHAR}, #{studentSchool,jdbcType=VARCHAR}, #{studentProfession,jdbcType=VARCHAR}, 
+      #{studentDirection,jdbcType=VARCHAR}, #{studentPhone,jdbcType=VARCHAR}, #{studentEmail,jdbcType=VARCHAR}, 
+      #{studentNum,jdbcType=VARCHAR}, #{studentAdress,jdbcType=VARCHAR}, #{studentRemark,jdbcType=VARCHAR}, 
+      #{studentClazzName,jdbcType=VARCHAR}, #{studentClazzId,jdbcType=VARCHAR}, #{studentGroupId,jdbcType=VARCHAR}, 
+      #{studentStatus,jdbcType=INTEGER}, #{studentRemark1,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.seven.common.domain.Student">
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="studentName != null">
+        student_name,
+      </if>
+      <if test="studentSex != null">
+        student_sex,
+      </if>
+      <if test="studentScore != null">
+        student_score,
+      </if>
+      <if test="studentSchool != null">
+        student_school,
+      </if>
+      <if test="studentProfession != null">
+        student_profession,
+      </if>
+      <if test="studentDirection != null">
+        student_direction,
+      </if>
+      <if test="studentPhone != null">
+        student_phone,
+      </if>
+      <if test="studentEmail != null">
+        student_email,
+      </if>
+      <if test="studentNum != null">
+        student_num,
+      </if>
+      <if test="studentAdress != null">
+        student_adress,
+      </if>
+      <if test="studentRemark != null">
+        student_remark,
+      </if>
+      <if test="studentClazzName != null">
+        student_clazz_name,
+      </if>
+      <if test="studentClazzId != null">
+        student_clazz_id,
+      </if>
+      <if test="studentGroupId != null">
+        student_group_id,
+      </if>
+      <if test="studentStatus != null">
+        student_status,
+      </if>
+      <if test="studentRemark1 != null">
+        student_remark1,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="studentName != null">
+        #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentSex != null">
+        #{studentSex,jdbcType=INTEGER},
+      </if>
+      <if test="studentScore != null">
+        #{studentScore,jdbcType=VARCHAR},
+      </if>
+      <if test="studentSchool != null">
+        #{studentSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="studentProfession != null">
+        #{studentProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="studentDirection != null">
+        #{studentDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="studentPhone != null">
+        #{studentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="studentEmail != null">
+        #{studentEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="studentNum != null">
+        #{studentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentAdress != null">
+        #{studentAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="studentRemark != null">
+        #{studentRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="studentClazzName != null">
+        #{studentClazzName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentClazzId != null">
+        #{studentClazzId,jdbcType=VARCHAR},
+      </if>
+      <if test="studentGroupId != null">
+        #{studentGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="studentStatus != null">
+        #{studentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="studentRemark1 != null">
+        #{studentRemark1,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.seven.common.domain.Student">
+    update student
+    <set>
+      <if test="studentName != null">
+        student_name = #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentSex != null">
+        student_sex = #{studentSex,jdbcType=INTEGER},
+      </if>
+      <if test="studentScore != null">
+        student_score = #{studentScore,jdbcType=VARCHAR},
+      </if>
+      <if test="studentSchool != null">
+        student_school = #{studentSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="studentProfession != null">
+        student_profession = #{studentProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="studentDirection != null">
+        student_direction = #{studentDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="studentPhone != null">
+        student_phone = #{studentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="studentEmail != null">
+        student_email = #{studentEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="studentNum != null">
+        student_num = #{studentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentAdress != null">
+        student_adress = #{studentAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="studentRemark != null">
+        student_remark = #{studentRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="studentClazzName != null">
+        student_clazz_name = #{studentClazzName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentClazzId != null">
+        student_clazz_id = #{studentClazzId,jdbcType=VARCHAR},
+      </if>
+      <if test="studentGroupId != null">
+        student_group_id = #{studentGroupId,jdbcType=VARCHAR},
+      </if>
+      <if test="studentStatus != null">
+        student_status = #{studentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="studentRemark1 != null">
+        student_remark1 = #{studentRemark1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where student_id = #{studentId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.seven.common.domain.Student">
+    update student
+    set student_name = #{studentName,jdbcType=VARCHAR},
+      student_sex = #{studentSex,jdbcType=INTEGER},
+      student_score = #{studentScore,jdbcType=VARCHAR},
+      student_school = #{studentSchool,jdbcType=VARCHAR},
+      student_profession = #{studentProfession,jdbcType=VARCHAR},
+      student_direction = #{studentDirection,jdbcType=VARCHAR},
+      student_phone = #{studentPhone,jdbcType=VARCHAR},
+      student_email = #{studentEmail,jdbcType=VARCHAR},
+      student_num = #{studentNum,jdbcType=VARCHAR},
+      student_adress = #{studentAdress,jdbcType=VARCHAR},
+      student_remark = #{studentRemark,jdbcType=VARCHAR},
+      student_clazz_name = #{studentClazzName,jdbcType=VARCHAR},
+      student_clazz_id = #{studentClazzId,jdbcType=VARCHAR},
+      student_group_id = #{studentGroupId,jdbcType=VARCHAR},
+      student_status = #{studentStatus,jdbcType=INTEGER},
+      student_remark1 = #{studentRemark1,jdbcType=VARCHAR}
+    where student_id = #{studentId,jdbcType=VARCHAR}
+  </update>
+</mapper>

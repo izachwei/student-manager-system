@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.seven.dao.GroupMapper">
+  <resultMap id="BaseResultMap" type="com.wj.seven.common.domain.Group">
+    <id column="group_id" jdbcType="VARCHAR" property="groupId" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="group_count" jdbcType="INTEGER" property="groupCount" />
+    <result column="group_leader_id" jdbcType="VARCHAR" property="groupLeaderId" />
+    <result column="group_leader_name" jdbcType="VARCHAR" property="groupLeaderName" />
+    <result column="group_project_id" jdbcType="VARCHAR" property="groupProjectId" />
+    <result column="group_project_name" jdbcType="VARCHAR" property="groupProjectName" />
+    <result column="group_clazz_id" jdbcType="VARCHAR" property="groupClazzId" />
+    <result column="group_remarks1" jdbcType="VARCHAR" property="groupRemarks1" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    group_id, group_name, group_count, group_leader_id, group_leader_name, group_project_id, 
+    group_project_name, group_clazz_id, group_remarks1
+  </sql>
+
+  <select id="selectByClazzId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from `group`
+    where group_clazz_id = #{groupClazzId}
+  </select>
+  
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from `group`
+    where group_id = #{groupId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from group
+    where group_id = #{groupId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wj.seven.common.domain.Group">
+    insert into `group` (group_id, group_name, group_count,
+      group_leader_id, group_leader_name, group_project_id,
+      group_project_name, group_clazz_id, group_remarks1
+      )
+    values(#{groupId,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{groupCount,jdbcType=INTEGER},
+      #{groupLeaderId,jdbcType=VARCHAR}, #{groupLeaderName,jdbcType=VARCHAR}, #{groupProjectId,jdbcType=VARCHAR},
+      #{groupProjectName,jdbcType=VARCHAR}, #{groupClazzId,jdbcType=VARCHAR}, #{groupRemarks1,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.seven.common.domain.Group">
+    insert into group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="groupCount != null">
+        group_count,
+      </if>
+      <if test="groupLeaderId != null">
+        group_leader_id,
+      </if>
+      <if test="groupLeaderName != null">
+        group_leader_name,
+      </if>
+      <if test="groupProjectId != null">
+        group_project_id,
+      </if>
+      <if test="groupProjectName != null">
+        group_project_name,
+      </if>
+      <if test="groupClazzId != null">
+        group_clazz_id,
+      </if>
+      <if test="groupRemarks1 != null">
+        group_remarks1,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCount != null">
+        #{groupCount,jdbcType=INTEGER},
+      </if>
+      <if test="groupLeaderId != null">
+        #{groupLeaderId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupLeaderName != null">
+        #{groupLeaderName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupProjectId != null">
+        #{groupProjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupProjectName != null">
+        #{groupProjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupClazzId != null">
+        #{groupClazzId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupRemarks1 != null">
+        #{groupRemarks1,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.seven.common.domain.Group">
+    update group
+    <set>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCount != null">
+        group_count = #{groupCount,jdbcType=INTEGER},
+      </if>
+      <if test="groupLeaderId != null">
+        group_leader_id = #{groupLeaderId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupLeaderName != null">
+        group_leader_name = #{groupLeaderName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupProjectId != null">
+        group_project_id = #{groupProjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupProjectName != null">
+        group_project_name = #{groupProjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupClazzId != null">
+        group_clazz_id = #{groupClazzId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupRemarks1 != null">
+        group_remarks1 = #{groupRemarks1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.seven.common.domain.Group">
+    update group
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      group_count = #{groupCount,jdbcType=INTEGER},
+      group_leader_id = #{groupLeaderId,jdbcType=VARCHAR},
+      group_leader_name = #{groupLeaderName,jdbcType=VARCHAR},
+      group_project_id = #{groupProjectId,jdbcType=VARCHAR},
+      group_project_name = #{groupProjectName,jdbcType=VARCHAR},
+      group_clazz_id = #{groupClazzId,jdbcType=VARCHAR},
+      group_remarks1 = #{groupRemarks1,jdbcType=VARCHAR}
+    where group_id = #{groupId,jdbcType=VARCHAR}
+  </update>
+</mapper>

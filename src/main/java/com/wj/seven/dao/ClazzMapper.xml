@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wj.seven.dao.ClazzMapper">
+  <resultMap id="BaseResultMap" type="com.wj.seven.common.domain.Clazz">
+    <id column="clazz_id" jdbcType="VARCHAR" property="clazzId" />
+    <result column="clazz_name" jdbcType="VARCHAR" property="clazzName" />
+    <result column="clazz_stu_count" jdbcType="INTEGER" property="clazzStuCount" />
+    <result column="clazz_direction" jdbcType="VARCHAR" property="clazzDirection" />
+    <result column="clazz_create_time" jdbcType="TIMESTAMP" property="clazzCreateTime" />
+    <result column="clazz_start_time" jdbcType="TIMESTAMP" property="clazzStartTime" />
+    <result column="clazz_end_time" jdbcType="TIMESTAMP" property="clazzEndTime" />
+    <result column="clazz_group_num" jdbcType="INTEGER" property="clazzGroupNum" />
+    <result column="clazz_status" jdbcType="INTEGER" property="clazzStatus" />
+    <result column="clazz_clazz_remark" jdbcType="VARCHAR" property="clazzClazzRemark" />
+    <result column="clazz_engineer_id" jdbcType="VARCHAR" property="clazzEngineerId" />
+    <association property="clazzEngineerName" column="clazz_engineer_id" select="getEngineer"/>
+  </resultMap>
+  <sql id="selectByNotDel" >
+     clazz_status = 1
+  </sql>
+  
+  
+  <select id="getEngineer" parameterType="java.lang.String" resultType="java.lang.String">
+      select  engineer_name from  engineer where  engineer_id = #{clazzEngineerId}  and engineer_status=1
+  </select>
+  
+  <sql id="Base_Column_List">
+    clazz_id, clazz_name, clazz_stu_count, clazz_direction, clazz_create_time, clazz_start_time, 
+    clazz_end_time, clazz_group_num, clazz_status, clazz_clazz_remark, clazz_engineer_id
+  </sql>
+
+  <!-- 查询所有班级 -->
+  <select id="findAll"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from clazz where
+    <include refid="selectByNotDel"/>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from clazz
+    where clazz_id = #{clazzId,jdbcType=VARCHAR} and
+    <include refid="selectByNotDel"/>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from clazz
+    where clazz_id = #{clazzId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wj.seven.common.domain.Clazz">
+    insert into clazz (clazz_id, clazz_name, clazz_stu_count, 
+      clazz_direction, clazz_create_time, clazz_start_time, 
+      clazz_end_time, clazz_group_num, clazz_status, 
+      clazz_clazz_remark, clazz_engineer_id)
+    values (#{clazzId,jdbcType=VARCHAR}, #{clazzName,jdbcType=VARCHAR}, #{clazzStuCount,jdbcType=INTEGER}, 
+      #{clazzDirection,jdbcType=VARCHAR}, #{clazzCreateTime,jdbcType=TIMESTAMP}, #{clazzStartTime,jdbcType=TIMESTAMP}, 
+      #{clazzEndTime,jdbcType=TIMESTAMP}, #{clazzGroupNum,jdbcType=INTEGER}, #{clazzStatus,jdbcType=INTEGER}, 
+      #{clazzClazzRemark,jdbcType=VARCHAR}, #{clazzEngineerId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wj.seven.common.domain.Clazz">
+    insert into clazz
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clazzId != null">
+        clazz_id,
+      </if>
+      <if test="clazzName != null">
+        clazz_name,
+      </if>
+      <if test="clazzStuCount != null">
+        clazz_stu_count,
+      </if>
+      <if test="clazzDirection != null">
+        clazz_direction,
+      </if>
+      <if test="clazzCreateTime != null">
+        clazz_create_time,
+      </if>
+      <if test="clazzStartTime != null">
+        clazz_start_time,
+      </if>
+      <if test="clazzEndTime != null">
+        clazz_end_time,
+      </if>
+      <if test="clazzGroupNum != null">
+        clazz_group_num,
+      </if>
+      <if test="clazzStatus != null">
+        clazz_status,
+      </if>
+      <if test="clazzClazzRemark != null">
+        clazz_clazz_remark,
+      </if>
+      <if test="clazzEngineerId != null">
+        clazz_engineer_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clazzId != null">
+        #{clazzId,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzName != null">
+        #{clazzName,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzStuCount != null">
+        #{clazzStuCount,jdbcType=INTEGER},
+      </if>
+      <if test="clazzDirection != null">
+        #{clazzDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzCreateTime != null">
+        #{clazzCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clazzStartTime != null">
+        #{clazzStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clazzEndTime != null">
+        #{clazzEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clazzGroupNum != null">
+        #{clazzGroupNum,jdbcType=INTEGER},
+      </if>
+      <if test="clazzStatus != null">
+        #{clazzStatus,jdbcType=INTEGER},
+      </if>
+      <if test="clazzClazzRemark != null">
+        #{clazzClazzRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzEngineerId != null">
+        #{clazzEngineerId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wj.seven.common.domain.Clazz">
+    update clazz
+    <set>
+      <if test="clazzName != null">
+        clazz_name = #{clazzName,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzStuCount != null">
+        clazz_stu_count = #{clazzStuCount,jdbcType=INTEGER},
+      </if>
+      <if test="clazzDirection != null">
+        clazz_direction = #{clazzDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzCreateTime != null">
+        clazz_create_time = #{clazzCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clazzStartTime != null">
+        clazz_start_time = #{clazzStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clazzEndTime != null">
+        clazz_end_time = #{clazzEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clazzGroupNum != null">
+        clazz_group_num = #{clazzGroupNum,jdbcType=INTEGER},
+      </if>
+      <if test="clazzStatus != null">
+        clazz_status = #{clazzStatus,jdbcType=INTEGER},
+      </if>
+      <if test="clazzClazzRemark != null">
+        clazz_clazz_remark = #{clazzClazzRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzEngineerId != null">
+        clazz_engineer_id = #{clazzEngineerId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where clazz_id = #{clazzId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wj.seven.common.domain.Clazz">
+    update clazz
+    set clazz_name = #{clazzName,jdbcType=VARCHAR},
+      clazz_stu_count = #{clazzStuCount,jdbcType=INTEGER},
+      clazz_direction = #{clazzDirection,jdbcType=VARCHAR},
+      clazz_create_time = #{clazzCreateTime,jdbcType=TIMESTAMP},
+      clazz_start_time = #{clazzStartTime,jdbcType=TIMESTAMP},
+      clazz_end_time = #{clazzEndTime,jdbcType=TIMESTAMP},
+      clazz_group_num = #{clazzGroupNum,jdbcType=INTEGER},
+      clazz_status = #{clazzStatus,jdbcType=INTEGER},
+      clazz_clazz_remark = #{clazzClazzRemark,jdbcType=VARCHAR},
+      clazz_engineer_id = #{clazzEngineerId,jdbcType=VARCHAR}
+    where clazz_id = #{clazzId,jdbcType=VARCHAR}
+  </update>
+</mapper>
